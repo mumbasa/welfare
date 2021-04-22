@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+xmlns:th="http://www.thymeleaf.org" 
+layout:decorate="~{index.html}">
+<head>
+<meta charset="UTF-8">
+<title>System Users Details</title>
+                         
+</head>
+<body>
+                 <div class="page-content" layout:fragment="content">
+   <th:block layout:fragment="tables"></th:block>       
+      <th:block layout:fragment="alerts"></th:block>       
+  <script th:inline="javascript">
+  
+  function deactivate(id) {
+	  
+	  
+	  Swal.fire({title:"Are you sure?",text:"You won't be able to revert this!",icon:"warning",showCancelButton:!0,confirmButtonText:"Yes, delete it!",cancelButtonText:"No, cancel!",confirmButtonClass:"btn btn-success mt-2",cancelButtonClass:"btn btn-danger ml-2 mt-2",buttonsStyling:!1}).
+	  then(function(t){t.value?keke(id):
+		  t.dismiss===Swal.DismissReason.cancel&&Swal.fire({title:"Cancelled",text:"Your imaginary file is safe :)",icon:"error"})});
+	  
+	  
+	 
+		
+
+	}
+	
+  function keke(id){
+	  $.ajax({
+			url:'/delete/user/'+id,
+			type : 'get',
+			success : function(data) {
+				alert(data);
+				Swal.fire({title:"Deleted",text:"Staff Deleted",icon:"success"});
+				  $( "#staffs" ).load(window.location.href + " #staffs" );
+
+			},
+			error : function(error) {
+
+				iziToast.show({
+					title : 'Error',
+					color : 'red',
+					position : 'topRight',
+					message : 'Error '
+				});
+			}
+
+		});
+  }
+	
+  function update(id){
+	alert(id);
+		var dataString ="password="+id+"&role="+$('#sele').val();
+		$.ajax({
+			url:'/update/user/'+id,
+			type:'get',
+			data:dataString,
+			success:function(data){
+		
+					 $( "#example1" ).load( "admin/user/data #example1");	
+			
+				
+			},
+			error:function(error){
+				
+				
+			}
+			
+		});
+		 
+		
+	}
+  
+  </script>
+  
+  
+  
+  
+                <!-- Page-Title -->
+                    <div class="page-title-box">
+                        <div class="container-fluid">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h4 class="page-title mb-1">Access Control Users</h4>
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Access Points</a></li>
+                                    <li class="breadcrumb-item active">Users</li>
+                                    </ol>
+                                </div>
+                               
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- end page title end breadcrumb -->
+
+                    <div class="page-content-wrapper">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-12" id="staffs">
+                                    <div class="card">
+                                        <div class="card-body">
+            
+                                            <h4 class="header-title">List of Staff</h4>
+                                            <p class="card-title-desc">List of staff and their details  </p>
+            
+                                          
+                                          
+                                            <table  class="datatable table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Picture</th>
+                  <th>Name</th>
+                  <th>Username</th>
+                   <th>Role</th>
+                
+                  
+                  <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="a,i:${users}" >
+                 <td th:text="${i.index+1}" style="line-height:30px">1</td>
+                 
+                  <td  ><img th:src="'http://localhost/pics/'+${a.picture}"></td>
+                  <td th:text="${a.name}" style="line-height:30px">Internet
+                    Explorer 4.0
+                  </td>
+                                           
+                  <td th:text="${a.username}">Win 95+</td>
+                  <td th:text="${a.role.role}"> 4</td>
+                  <td><button class="btn btn-danger" th:onclick="'deactivate('+${a.id}+')'">Delete</button> 
+                  <button class="btn btn-primary"  data-toggle="modal" th:data-target="'#modal-default'+${a.id}">Update</button>
+                  
+                   <div class="modal fade" th:id="'modal-default'+${a.id}">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+               <h4 class="modal-title">Update User</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+               
+              </div>
+              <div class="modal-body">
+         <div class="row">
+       
+            <!-- /.box-header -->
+            <!-- form start -->
+            
+            
+              <div class="col-xl-12">
+                                    
+
+                                            <div>
+                                                <div class="form-group form-group-custom mb-4">
+                                                    <input type="text" class="form-control" name="email" id="username" required th:value="${a.username}" disabled="disabled">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group form-group-custom mb-4">
+                                                            <input type="email" class="form-control" name="password" id="useremail" required>
+                                                            <label for="useremail">Password</label> 
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group form-group-custom mb-4">
+                                                           <select class="form-control" id="sele"
+											data-placeholder="Select a role" style="width: 100%;" name="roleid">
+											<option th:each="p:${role}" th:text="${p.role}" th:selected="${p.id==a.roleid}"
+												th:value="${p.id}"></option>
+
+										</select>
+                                                            <label for="userpassword">Role</label>
+                                                        </div>
+                                                    </div>
+                                             
+                                        </div>
+                                    </div>
+                                </div>
+            
+            
+            
+            
+            </div>
+       
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" th:onclick="'update('+${a.id}+')'" data-dismiss="modal">Update  <i class="fa fa-arrow-circle-right"></i></button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
+                  
+                  </td>
+                </tr>
+             
+                </tbody>
+             
+              </table>
+            
+                                          
+                                                </div>
+                                    </div>
+                                </div> <!-- end col -->
+                            </div> <!-- end row -->
+            
+                          </div>
+                        <!-- end container-fluid -->
+                    </div> 
+                    <!-- end page-content-wrapper -->
+                </div>
+                <!-- End Page-content -->
+
+                
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{index.html}">
+<head>
+<meta charset="UTF-8">
+<title>Departments</title>
+
+</head>
+<body>
+
+	<div class="page-content" layout:fragment="content">
+		<th:block layout:fragment="tables"></th:block>
+		<script type="text/javascript">
+			function add() {
+				var dept = $("#dept").val();
+				var formData = new FormData();
+				formData.append("dept", dept);
+				$.ajax({
+					url : '/department',
+					type : 'post',
+					processData : false,
+					contentType : false,
+					data : formData,
+					success : function(data) {
+						   $('.modal').modal('toggle');
+						Swal.fire({
+							position : "top-center",
+							icon : "success",
+							title : "Department Added",
+							showConfirmButton : false,
+							timer : 1500
+						});
+
+					},
+					error : function(error) {
+
+						iziToast.show({
+							title : 'Error',
+							color : 'red',
+							position : 'topRight',
+							message : 'Error '
+						});
+					}
+
+				});
+
+			}
+		</script>
+
+
+		<div class="page-title-box">
+			<div class="container-fluid">
+				<div class="row align-items-center">
+					<div class="col-md-8">
+						<h4 class="page-title mb-1">Departments</h4>
+						<ol class="breadcrumb m-0">
+							<li class="breadcrumb-item"><a th:href="@{/admin/user/data}">Settings</a></li>
+							<li class="breadcrumb-item active">Departments</li>
+						</ol>
+					</div>
+					<div class="col-md-4">
+						<div class="float-right d-none d-md-block">
+							<div class="dropdown">
+								<button class="btn btn-light btn-rounded dropdown-toggle"
+									type="button" data-toggle="modal"
+									data-target=".bs-example-modal-lg" aria-haspopup="true"
+									aria-expanded="false">
+									<i class="mdi mdi-plus mr-1"></i> New Department
+								</button>
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<!-- end page title end breadcrumb -->
+
+		<div class="page-content-wrapper">
+			<div class="container-fluid">
+				<div class="row mb-4">
+					<div class="col-xl-12">
+						<div class="card mb-0">
+							<div class="card-body">
+								<h4 class="header-title">Department</h4>
+								<p class="card-title-desc">Details of Departments</p>
+								<table id="datatable"
+									class="datatable table table-bordered dt-responsive nowrap"
+									style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Department</th>
+											<th>Date Added</th>
+											<th>Number of Staff</th>
+											<th>#</th>
+										</tr>
+									</thead>
+
+
+									<tbody>
+										<tr th:each="a,i:${depts}">
+											<td th:text="${i.index+1}" style="line-height: 30px">1</td>
+
+											<td th:text="${a.name}">Win 95+</td>
+											<td th:text="${a.dateAdded}">4</td>
+											<td th:text="${a.staffSize}">Win 95+</td>
+											<td ><button class="btn btn-info"> Update</button> <button class="btn btn-danger"> Delete</button></td>
+
+										</tr>
+
+									</tbody>
+								</table>
+
+
+
+
+							</div>
+						</div>
+						<!-- end card -->
+
+
+
+
+
+					</div>
+				</div>
+				<!-- end row -->
+
+				<div class="modal fade bs-example-modal-lg" tabindex="-1"
+					role="dialog" aria-labelledby="cards" aria-hidden="true">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title mt-0" id="myLargeModalLabel">Add New
+									Department</h5>
+								<button type="button" class="close" data-dismiss="modal"
+									aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<div>
+									<div class="form-group-custom mb-4">
+										<input type="text" class="form-control" id="dept" name="dept"
+											required> <label for="username">Deparmtent
+											Name</label>
+									</div>
+									<div class="mt-4">
+										<button class="btn btn-primary waves-effect waves-light"
+											type="submit" onclick="add()">Submit</button>
+									</div>
+
+								</div>
+							</div>
+						</div>
+						<!-- /.modal-content -->
+					</div>
+					<!-- /.modal-dialog -->
+				</div>
+				<!-- /.modal -->
+
+			</div>
+			<!-- end container-fluid -->
+		</div>
+		<!-- end page-content-wrapper -->
+
+	</div>
+	<!-- End Page-content -->
+
+
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+xmlns:th="http://www.thymeleaf.org" 
+layout:decorate="~{index.html}">
+<head>
+<meta charset="UTF-8">
+<title>Devices</title>
+                         
+</head>
+<body>
+                 <div class="page-content" layout:fragment="content">
+   <th:block layout:fragment="tables"></th:block>       
+      <th:block layout:fragment="alerts"></th:block>       
+   
+   <script type="text/javascript">
+
+function send(id){
+
+	$.ajax({
+		url:'/admin/remote/open/'+id,
+		type:'get',
+		success:function(data){
+			Swal.fire({position:"top-end",icon:"success",title:"Your command to open the door has been sent",showConfirmButton:!1,timer:1500});
+	
+		
+		},
+		error:function(error){
+			
+			iziToast.show({
+			    title: 'Error',
+			    color: 'red',
+			    position:'topRight',
+			    message: 'Error '
+			});
+		}
+		
+	});
+	 
+}
+
+function ping(id){
+	$.ajax({
+		url:'/admin/remote/ping/'+id,
+		type:'get',
+		success:function(data){
+		
+		}
+			,
+		error:function(error){
+			
+			iziToast.show({
+			    title: 'Error',
+			    color: 'red',
+			    position:'topRight',
+			    message: 'Error '
+			});
+		}
+		
+	});
+	 
+}
+
+function shutdown(id){
+	Swal.fire({title:"Are you sure?",text:"You won't be able to revert this!",icon:"warning",showCancelButton:!0,confirmButtonColor:"#3ddc97",cancelButtonColor:"#f46a6a",confirmButtonText:"Yes, delete it!"}).then(function(t){t.value&&Swal.fire("Deleted!","Your file has been deleted.","success")});
+	$.ajax({
+		url:'/admin/remote/shutdown/'+id,
+		type:'get',
+		success:function(data){
+			
+			iziToast.show({
+			    title: 'success',
+			    color: 'green',
+			    position:'topRight',
+			    message: 'Error '
+			});
+		}
+			,
+		error:function(error){
+			
+			iziToast.show({
+			    title: 'Error',
+			    color: 'red',
+			    position:'topRight',
+			    message: 'Error '
+			});
+		}
+		
+	});
+	 
+}
+
+function deactivate(id){
+
+$.ajax({
+		url:'/admin/point/'+id+'/staff',
+		type:'get',
+		success:function(data){
+			var options='';
+			for (var i in data) {
+			    options+='  <tr><td>'+(parseInt(i)+1)+'</td><td> <img src="http://localhost/pics/'+data[i].picture+'" style="width:50px;"> </td> <td>'+data[i].name+'</td>  </tr>'; 
+				
+			    }
+			$('#accstaff'+id).empty();
+			$('#accstaff'+id).append(options);
+			$('#staff'+id).modal('show');
+		},
+		error:function(error){
+			
+			iziToast.show({
+			    title: 'Error',
+			    color: 'red',
+			    position:'topRight',
+			    message: 'Error '
+			});
+		}
+		
+	});
+	 
+	
+}
+
+</script>
+   
+
+                    <!-- Page-Title -->
+                    <div class="page-title-box">
+                        <div class="container-fluid">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h4 class="page-title mb-1">Access Control Devices</h4>
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Access Points</a></li>
+                                    <li class="breadcrumb-item active">Devices</li>
+                                    </ol>
+                                </div>
+                               
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- end page title end breadcrumb -->
+
+                    <div class="page-content-wrapper">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+            
+                                            <h4 class="header-title">List of Devices</h4>
+                                            <p class="card-title-desc">List of Devices and their details  </p>
+            
+                                            <table  class="datatable table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                                <thead>
+                                                <tr>
+                                                   <th>#</th>
+                  <th>Access</th>
+                  <th>id</th>
+                  <th>Floor</th>
+                  <th></th>
+                                                </tr>
+                                                </thead>
+            
+            
+                                                <tbody>
+                                                <tr th:each="a,i:${devices}">
+                                                   <td th:text="${i.index+1}">1</td>
+                 <td th:text="${a.access}" >Trident</td>
+                  <td th:text="${a.uniqueCode}">Win 95+</td>
+                  <td th:text="${a.Floor}"> 4</td>
+               
+                  <td>
+                   <button   class="btn btn-primary"  data-toggle="modal" data-target=".bs-example-modal-xl" th:onclick="'deactivate('+${a.id}+')'">Staff Access</button>
+                   
+                   <div class="modal fade bs-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+                                                                <div class="modal-dialog modal-xl">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title mt-0" id="myExtraLargeModalLabel" th:text="${a.access}+'- Access Point Staff'">Extra large modal</h5>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                          <table  class="datatable table table-striped">
+                <thead>
+                <tr>
+                  <th>#</th>
+                  <th>picture</th>
+                  <th>name</th>
+                 
+                </tr>
+                </thead>
+                <tbody th:id="'accstaff'+${a.id}">
+                
+                
+          
+          </tbody></table>
+                                                                        </div>
+                                                                    </div><!-- /.modal-content -->
+                                                                </div><!-- /.modal-dialog -->
+                                                            </div><!-- /.modal -->
+                   
+                   
+                   
+                   
+                   
+                   
+                  <button   class="btn btn-success"  data-toggle="modal" th:onclick="'send('+${a.id}+')'">Open Door</button>
+                  <button   class="btn btn-warning"  data-toggle="modal" th:onclick="'ping('+${a.id}+')'">Ping</button>
+                    <button   class="btn btn-danger"  data-toggle="modal" th:onclick="'shutdown('+${a.id}+')'">Disable Access</button>
+                    <a   class="btn btn-info"  th:href="'/admin/point/'+${a.id}+'/logs'">Logs</a>
+                 
+                  </td>
+                                                </tr>
+                                              
+                                                </tbody>
+                                            </table>
+            
+                                        </div>
+                                    </div>
+                                </div> <!-- end col -->
+                            </div> <!-- end row -->
+            
+                          </div>
+                        <!-- end container-fluid -->
+                    </div> 
+                    <!-- end page-content-wrapper -->
+                </div>
+                <!-- End Page-content -->
+
+                
+</body>
+</html>

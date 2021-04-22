@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{index.html}">
+<head>
+<meta charset="UTF-8">
+<title>Loans Pending Approval</title>
+
+</head>
+<body>
+	<div class="page-content" layout:fragment="content">
+		<th:block layout:fragment="tables"></th:block>
+		<th:block layout:fragment="alerts"></th:block>
+		<div id="loading"
+			style="display: none; position: fixed; z-index: 1000; top: 0; left: 0; height: 100%; width: 100%; background: rgba(255, 255, 255, .8) url('/assets/images/ajax-loader.gif') 50% 50% no-repeat;">
+
+		</div>
+
+		<script type="text/javascript">
+		
+		
+		function rejectloan(id) {
+				$.ajax({
+				url : '/reject/loan/'+id,
+				type : 'post',
+				processData : false,
+				contentType : false,
+				success : function(data) {
+
+				
+
+					window.location.replace(window.location.href);
+				},
+
+			});
+		}
+	
+			function reject(id) {
+
+				Swal
+						.fire({
+							title : "Are you sure?",
+							text : "You won't be able to revert this!",
+							icon : "warning",
+							showCancelButton : !0,
+							confirmButtonText : "Yes, reject it!",
+							cancelButtonText : "No, cancel!",
+							confirmButtonClass : "btn btn-success mt-2",
+							cancelButtonClass : "btn btn-danger ml-2 mt-2",
+							buttonsStyling : !1
+						})
+						.then(
+								function(t) {
+									t.value ? rejectloan(id)
+											: t.dismiss === Swal.DismissReason.cancel
+													&& Swal
+															.fire({
+																title : "Cancelled",
+																text : "Your decision has not been effected :)",
+																icon : "error"
+															})
+								});
+
+			}
+
+			function edit(id) {
+				var form = $('#form' + id);
+				var formdata = false;
+				formdata = new FormData(form[0]);
+				$("#loading").show();
+
+				$.ajax({
+					url : '/approve/loan/',
+					type : 'post',
+					processData : false,
+					contentType : false,
+					data : formdata,
+					success : function(data) {
+
+						Swal.fire({
+							title : "Updated",
+							text : "Payment Record Updated",
+							icon : "success"
+						});
+						$('#record' + id).modal('toggle');
+
+						window.location.replace(window.location.href);
+					},
+
+				});
+			}
+			function showLoading() {
+				$("#loading").show();
+			}
+
+			function hideLoading() {
+				$("#loading").hide();
+			}
+		</script>
+
+
+		<!-- Page-Title -->
+		<div class="page-title-box">
+			<div class="container-fluid">
+				<div class="row align-items-center">
+					<div class="col-md-8">
+						<h4 class="page-title mb-1">Approvals</h4>
+						<ol class="breadcrumb m-0">
+							<li class="breadcrumb-item"><a href="javascript: void(0);">Loan</a></li>
+							<li class="breadcrumb-item active">Applications</li>
+						</ol>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+		<!-- end page title end breadcrumb -->
+
+		<div class="page-content-wrapper">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-body">
+
+								<h4 class="header-title">Unapproved Loans</h4>
+								<p class="card-title-desc">List of loans applications and
+									their details</p>
+
+								<table
+									class="datatable table table-bordered dt-responsive nowrap"
+									style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Staff</th>
+											<th>Amount Applied</th>
+											<th>Loan Type</th>
+											<th>Date Applied</th>
+											<th>Debts</th>
+											<th>Debt After Approval</th>
+											<th>Shares</th>
+											<th>Net Share</th>
+											<th></th>
+										</tr>
+									</thead>
+
+
+									<tbody>
+										<tr th:each="a,i:${loans}">
+											<td th:text="${i.index+1}">1</td>
+											<td th:text="${a.staffName}">Trident</td>
+											<td th:text="${a.amount}">Win 95+</td>
+											<td th:text="${a.type.type}">4</td>
+											<td th:text="${a.dateApplied}">4</td>
+											<td th:text="${a.arrears}">4</td>
+											<td th:text="${a.arrears+ a.amount}">4</td>
+											<td th:text="${a.shares}">4</td>
+
+											<td th:text="${a.arrears-a.shares}">4</td>
+											<td>
+												<button type="button"
+													class="btn btn-primary waves-effect waves-light"
+													data-toggle="modal" th:data-target="'#record'+${a.id}"  sec:authorize="hasRole('Chairman')">Approve
+													Loan</button> <!--  Modal content for the above example -->
+												<div th:id="'record'+${a.id}"
+													class="modal fade bs-example-modal-xl" tabindex="-1"
+													role="dialog" aria-labelledby="myExtraLargeModalLabel"
+													aria-hidden="true">
+													<div class="modal-dialog modal-xl">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title mt-0" id="myExtraLargeModalLabel">Approve
+																	Loan</h5>
+																<button type="button" class="close" data-dismiss="modal"
+																	aria-label="Close">
+																	<span aria-hidden="true">&times;</span>
+																</button>
+															</div>
+															<div class="modal-body">
+																<form action="" th:id="'form'+${a.id}">
+																	<div class="form-group row" style="display: none;">
+																		<label for="example-text-input"
+																			class="col-md-2 col-form-label">ID</label>
+																		<div class="col-md-10">
+																			<input class="form-control" type="number"
+																				th:value="${a.id}" name="id">
+																		</div>
+																	</div>
+																	<div class="form-group row">
+																		<label for="example-search-input"
+																			class="col-md-2 col-form-label">Approved
+																			Amount</label>
+																		<div class="col-md-10">
+																			<input class="form-control" type="number"
+																				name="amount" th:value="${a.amount}" id="eidtamount">
+																		</div>
+																	</div>
+																</form>
+
+																<div class="modal-footer">
+																	<button type="button"
+																		class="btn btn-secondary waves-effect"
+																		data-dismiss="modal">Close</button>
+																	<button type="button"
+																		class="btn btn-primary waves-effect waves-light"
+																		th:onclick="'edit('+${a.id}+')'">Save changes</button>
+																</div>
+
+															</div>
+														</div>
+														<!-- /.modal-content -->
+													</div>
+													<!-- /.modal-dialog -->
+												</div>
+												<button class="btn btn-danger" data-toggle="modal" sec:authorize="hasRole('Chairman')"
+												
+													th:onclick="'reject('+${a.id}+')'">Reject Loan</button>
+
+
+											</td>
+										</tr>
+
+									</tbody>
+								</table>
+
+							</div>
+						</div>
+					</div>
+					<!-- end col -->
+				</div>
+				<!-- end row -->
+
+			</div>
+			<!-- end container-fluid -->
+		</div>
+		<!-- end page-content-wrapper -->
+	</div>
+	<!-- End Page-content -->
+
+
+</body>
+</html>

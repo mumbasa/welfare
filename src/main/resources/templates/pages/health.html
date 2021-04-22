@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+xmlns:th="http://www.thymeleaf.org" 
+layout:decorate="~{index.html}">
+<head>
+<meta charset="UTF-8">
+<title>Devices Health</title>
+                         
+</head>
+<body>
+                 <div class="page-content" layout:fragment="content">
+                 
+                 <script type="text/javascript">
+
+function check(){
+	Swal.fire({title:"Sending Ping commands",html:"Wait for some few seconds <strong></strong> seconds.",timer:2e3,onBeforeOpen:function(){Swal.showLoading(),t=setInterval(function(){},100)},onClose:function(){clearInterval(t)}}).then(function(t){t.dismiss===Swal.DismissReason.timer&&console.log("I was closed by the timer")});
+
+	$('.status').each(function(i,obj){
+		$(obj).html('<i class="fa fa-times-circle" style="font-size:26px;color:red;"></i>');
+		
+	});
+	$.ajax({
+		url:'/health/check',
+		type:'get',
+		success:function(data){
+
+				
+			
+		},
+		error:function(error){
+			
+			iziToast.show({
+			    title: 'Error',
+			    color: 'red',
+			    position:'topRight',
+			    message: 'Decision Successful'
+			});
+		}
+		
+	});
+	 
+	
+}
+
+
+</script>
+                 
+   <th:block layout:fragment="tables"></th:block>       
+
+                    <!-- Page-Title -->
+                    <div class="page-title-box">
+                        <div class="container-fluid">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h4 class="page-title mb-1">Devices Health Checks</h4>
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Access Points</a></li>
+                                    <li class="breadcrumb-item active">Health</li>
+                                    </ol>
+                                </div>
+                               
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- end page title end breadcrumb -->
+
+                    <div class="page-content-wrapper">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+            
+                                            <h4 class="header-title">Devices Health</h4>
+                                          
+                                            <p>
+                          <button class="btn btn-info" th:onclick="check()">Check Health Status</button>
+            </p>
+                                            <table class="datatable table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                                <thead>
+                                                <tr>
+                  <th>#</th>
+                  <th>Accesss point</th>
+                  <th>Floor</th>
+                  <th>Health</th>             
+                <th>Last Ping time</th>
+                                                </tr>
+                                                </thead>
+            
+            
+                                                <tbody>
+                                                <tr th:each="a,i:${devices}" >
+                 <td th:text="${i.index+1}">1</td>
+                 
+                  <td th:text="${a.access}" >Trident</td>
+                  <td th:text="${a.floor}"  >Internet
+                    Explorer 4.0
+                  </td>
+               <td th:id="'status'+${a.id}" style="text-align: center;" class="status"></td>
+                      <td th:id="'ping'+${a.id}" class="ping"></td>
+                </tr>
+                                              
+                                                </tbody>
+                                            </table>
+            
+                                        </div>
+                                    </div>
+                                </div> <!-- end col -->
+                            </div> <!-- end row -->
+            
+                          </div>
+                        <!-- end container-fluid -->
+                    </div> 
+                    <!-- end page-content-wrapper -->
+                </div>
+                <!-- End Page-content -->
+
+                
+</body>
+</html>

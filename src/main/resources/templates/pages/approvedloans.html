@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+xmlns:th="http://www.thymeleaf.org" 
+layout:decorate="~{index.html}">
+<head>
+<meta charset="UTF-8">
+<title>Approved Loans For Collection</title>
+                         
+</head>
+<body>
+                 <div class="page-content" layout:fragment="content">
+   <th:block layout:fragment="tables"></th:block>       
+      <th:block layout:fragment="alerts"></th:block>       
+   
+   <script type="text/javascript">
+
+   function collect(id) {
+		  
+		  
+		  Swal.fire({title:"Are you sure?",text:"You won't be able to revert this!",icon:"warning",showCancelButton:!0,confirmButtonText:"Yes, delete it!",cancelButtonText:"No, cancel!",confirmButtonClass:"btn btn-success mt-2",cancelButtonClass:"btn btn-danger ml-2 mt-2",buttonsStyling:!1}).
+		  then(function(t){t.value?collectloan(id):
+			  t.dismiss===Swal.DismissReason.cancel&&Swal.fire({title:"Cancelled",text:"Your imaginary file is safe :)",icon:"error"})});
+		  
+		  
+		 
+			
+
+		}
+		
+	  function collectloan(id){
+		  $.ajax({
+				url:'/collect/loan/'+id,
+				type : 'get',
+				success : function(data) {
+					Swal.fire({title:"Collection",text:"Cheque collected",icon:"success"});
+				     window.location.replace(window.location.href);
+
+				},
+				error : function(error) {
+
+					iziToast.show({
+						title : 'Error',
+						color : 'red',
+						position : 'topRight',
+						message : 'Error '
+					});
+				}
+
+			});
+	  }
+		
+</script>
+   
+
+                    <!-- Page-Title -->
+                    <div class="page-title-box">
+                        <div class="container-fluid">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h4 class="page-title mb-1">List</h4>
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Loans</a></li>
+                                    <li class="breadcrumb-item active">Approved</li>
+                                    </ol>
+                                </div>
+                               
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- end page title end breadcrumb -->
+
+                    <div class="page-content-wrapper">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+            
+                                            <h4 class="header-title">Record of Payments</h4>
+                                            <p class="card-title-desc">List of Payments  and their details  </p>
+            
+                                            <table  class="datatable table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                                <thead>
+                                                <tr>
+                                                   <th>#</th>
+                  <th>Staff</th>
+                  <th>Amount Applied</th>
+                   <th>Amount Approved</th>
+                  <th>Loan Type</th>
+                  <th>Date Applied</th>
+                  
+                    <th>Approval Date</th>
+                  <th></th>
+                                                </tr>
+                                                </thead>
+            
+            
+                                                <tbody>
+                                                <tr th:each="a,i:${loans}">
+                                                   <td th:text="${i.index+1}">1</td>
+                 <td th:text="${a.staffName}" >Trident</td>
+                  <td th:text="${a.amount}">Win 95+</td>
+                  <td th:text="${a.approvedAmount}"> 4</td>
+                   <td th:text="${a.type.type}"> 4</td>
+                     <td th:text="${a.dateApplied}"> 4</td>
+                   <td th:text="${a.dateApproved}"> 4</td>
+                               
+               
+                  <td>
+                   <button   class="btn btn-primary"  data-toggle="modal" data-target=".bs-example-modal-xl" th:onclick="'collectloan('+${a.id}+')'">Collect Cheque</button>
+                   
+               
+                 
+                  </td>
+                                                </tr>
+                                              
+                                                </tbody>
+                                            </table>
+            
+                                        </div>
+                                    </div>
+                                </div> <!-- end col -->
+                            </div> <!-- end row -->
+            
+                          </div>
+                        <!-- end container-fluid -->
+                    </div> 
+                    <!-- end page-content-wrapper -->
+                </div>
+                <!-- End Page-content -->
+
+                
+</body>
+</html>

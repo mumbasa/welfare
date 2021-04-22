@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+xmlns:th="http://www.thymeleaf.org" 
+layout:decorate="~{index.html}">
+<head>
+<meta charset="UTF-8">
+<title>Events Calendar</title>
+                         
+</head>
+<body>
+                
+<div class="page-content" layout:fragment="content">
+   <th:block layout:fragment="calendar"></th:block> 
+   <script type="text/javascript">
+   
+   
+   $(document).ready(function() {
+	   $("#calendar2").fullCalendar(
+				{
+					header : {
+						left : "prev,next today",
+						center : "title",
+						right : "month,basicWeek,basicDay"
+					},
+					editable : true,
+					select: function( start, end){
+						var from = $.fullCalendar.moment(start).format();
+						var m= $.fullCalendar.moment(end).format();
+						  
+						  Swal.fire({title:"Are you sure?",text:"Do you want to query information between "+from +' to '+m+" ?",icon:"info",showCancelButton:!0,confirmButtonText:"Yes, proceed",cancelButtonText:"No, cancel!",confirmButtonClass:"btn btn-primary mt-2",cancelButtonClass:"btn btn-success ml-2 mt-2",buttonsStyling:!1}).
+						  then(function(t){t.value?window.location.replace('/events?from='+from+'&to='+m):
+							  t.dismiss===Swal.DismissReason.cancel&&Swal.fire({title:"Cancelled",icon:"error"})});
+						  
+						  
+						 
+						
+						
+					},
+					  selectable: true,
+					droppable : !0,
+					   });
+   
+   });
+   
+   </script>      
+
+                    <!-- Page-Title -->
+                    <div class="page-title-box">
+                        <div class="container-fluid">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h4 class="page-title mb-1">Calendar</h4>
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Report</a></li>
+                                    <li class="breadcrumb-item active">Calendar</li>
+                                    </ol>
+                                </div>
+                            
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- end page title end breadcrumb -->
+
+                    <div class="page-content-wrapper">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+            
+                                            <div class="row">
+                                               
+            
+                                                <div id='calendar2' class="col-xl-12 col-lg-12 col-md-12 mt-4 mt-md-0"></div>
+            
+                                            </div>
+                                            <!-- end row -->
+            
+                                        </div>
+                                    </div>
+                                </div> <!-- end col -->
+                            </div> <!-- end row -->
+
+                        </div>
+                        <!-- end container-fluid -->
+                    </div> 
+                    <!-- end page-content-wrapper -->
+                </div>
+                <!-- End Page-content -->
+
+                
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                2020 © Xoric.
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="text-sm-right d-none d-sm-block">
+                                    Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesdesign
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+                
+</body>
+</html>

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{index.html}">
+<head>
+<meta charset="UTF-8">
+<title th:text="${staff.name}+' Profile '">Devices</title>
+
+</head>
+<body>
+
+	<div class="page-content" layout:fragment="content">
+		<th:block layout:fragment="tables"></th:block>
+<script type="text/javascript">
+
+$(document).ready(function() {
+	$(".selectize").selectize();
+
+});
+
+function newcard(id){
+	var formData = new FormData();
+	formData.append('user',id);
+	formData.append('card',$('#uid').val());
+	$.ajax({
+		url : '/staff/card',
+		data : formData,
+		processData : false,
+		contentType : false,
+		cache : false,
+		type : 'post',
+		success : function(data) {
+			if (data == 1) {
+				Swal.fire({
+					title : "Successful",
+					text : "Staff Card  assigned",
+					icon : "success",
+					confirmButtonColor : "#3051d3"
+				});
+				$('.form-horizontal')[0].reset();
+
+			}
+
+		}
+
+	});
+	
+	
+	
+}
+
+function newaccess(id){
+	var formData = new FormData();
+	formData.append('user',id);
+	formData.append('access',$('#sele').val());
+	$.ajax({
+		url : '/staff/access',
+		data : formData,
+		processData : false,
+		contentType : false,
+		cache : false,
+		type : 'post',
+		success : function(data) {
+			if (data == 1) {
+				Swal.fire({
+					title : "Successful",
+					text : "Staff access granted",
+					icon : "success",
+					confirmButtonColor : "#3051d3"
+				});
+				$('.form-horizontal')[0].reset();
+
+			}
+
+		}
+
+	});
+	
+	
+	
+}
+
+
+
+
+function revokeCard(id,card){
+	var formData = new FormData();
+	formData.append('id',id);
+	formData.append('card',$('#card'+card).text());
+	$.ajax({
+		url : '/revoke/staff/card/',
+		data : formData,
+		processData : false,
+		contentType : false,
+		cache : false,
+		type : 'post',
+		success : function(data) {
+			
+				Swal.fire({
+					title : "Successful",
+					text : "Staff card revoked",
+					icon : "success",
+					confirmButtonColor : "#3051d3"
+				});
+				$('.form-horizontal')[0].reset();
+
+			}
+
+	
+
+	});
+	
+	
+	
+}
+
+
+
+
+function revokeAccess(id,point){
+	var formData = new FormData();
+	formData.append('id',id);
+	formData.append('point',point);
+	$.ajax({
+		url : '/suspend/staff/',
+		data : formData,
+		processData : false,
+		contentType : false,
+		cache : false,
+		type : 'post',
+		success : function(data) {
+			if (data == 1) {
+				Swal.fire({
+					title : "Successful",
+					text : "Staff access suspended",
+					icon : "success",
+					confirmButtonColor : "#3051d3"
+				});
+				$('.form-horizontal')[0].reset();
+
+			}
+
+		}
+
+	});
+	
+	
+	
+}
+
+function grant(id,point){
+	var formData = new FormData();
+	formData.append('id',id);
+	formData.append('point',point);
+	$.ajax({
+		url : '/grant/staff/',
+		data : formData,
+		processData : false,
+		contentType : false,
+		cache : false,
+		type : 'post',
+		success : function(data) {
+		
+				Swal.fire({
+					title : "Successful",
+					text : "Staff access granted",
+					icon : "success",
+					confirmButtonColor : "#3051d3"
+				});
+				$('.form-horizontal')[0].reset();
+
+			}
+
+		
+
+	});
+	
+	
+	
+}
+
+
+
+</script>
+		<div class="page-title-box">
+			<div class="container-fluid">
+				<div class="row align-items-center">
+					<div class="col-md-8">
+						<h4 class="page-title mb-1" th:text="${staff.name}">Staff
+							Name</h4>
+						<ol class="breadcrumb m-0">
+							<li class="breadcrumb-item"><a th:href="@{/admin/user/data}">Staff</a></li>
+							<li class="breadcrumb-item active" th:text="${staff.name}">Email
+								Read</li>
+						</ol>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+		<!-- end page title end breadcrumb -->
+
+		<div class="page-content-wrapper">
+			<div class="container-fluid">
+				<div class="row mb-4">
+					<div class="col-xl-3">
+						<div class="card h-100">
+							<div class="card-body email-leftbar">
+
+								<div 	style="width: 360px; height: 400px;">
+									<img class="img-thumbnail" alt="200x200"
+										style="width: 360px; height: 400px;"
+										th:src="@{'/downloadFile/'+${staffdetail.picture}}"
+										data-holder-rendered="true">
+								</div>
+								<div class="mail-list mt-4">
+									<a href="#" >Loans Taken<i class="mdi mdi-inbox mr-2"></i>
+										<span class="ml-1" th:text="${loanstotal}">(18)</span></a> 
+										<a href="#" >Loans Paid<i class="mdi mdi-inbox mr-2"></i>
+										<span class="ml-1" th:text="${loanspaid}">(18)</span></a> 
+										
+										<a href="#" >Welfare Shares<i class="mdi mdi-circle-outline mr-2 text-primary"></i>
+										<span class="ml-1 " th:text="${welfare}">(18)</span></a> 
+										
+										
+								</div>
+<hr>
+							<!-- 	<div class="mail-list mt-4">
+									<button class="btn btn-primary col-12">Add Access</button>
+											<button class="btn btn-primary col-12 mt-3">Add New Card</button>
+										
+									
+										
+								</div> -->
+							</div>
+						</div>
+					</div>
+
+<div class="col-xl-9">
+
+
+<div class="row">
+                                    <div class="card col-lg-12">
+                                        <div class="card-body">
+                                            <h4 class="header-title">Staff Performance Details</h4>
+                                            <p class="card-title-desc">Select the tabs to view data</p>
+            
+                                            <!-- Nav tabs -->
+                                            <ul class="nav nav-tabs nav-justified nav-tabs-custom" role="tablist">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" data-toggle="tab" href="#custom-home" role="tab">
+                                                        <i class="fas fa-home mr-1"></i> <span class="d-none d-md-inline-block">Share Payments</span> 
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" data-toggle="tab" href="#custom-profile" role="tab">
+                                                        <i class="fas fa-user mr-1 align-middle"></i> <span class="d-none d-md-inline-block">Loans Payments</span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" data-toggle="tab" href="#custom-messages" role="tab">
+                                                        <i class="far fa-envelope mr-1 align-middle"></i> <span class="d-none d-md-inline-block">Loans Taken</span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" data-toggle="tab" href="#custom-settings" role="tab">
+                                                        <i class="fas fa-cog mr-1 align-middle"></i> <span class="d-none d-md-inline-block">Interest</span>
+                                                    </a>
+                                                </li>
+                                                
+                                                 <li class="nav-item">
+                                                    <a class="nav-link" data-toggle="tab" href="#beneficiaries" role="tab">
+                                                        <i class="fas fa-cog mr-1 align-middle"></i> <span class="d-none d-md-inline-block">Beneficiaries</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+            
+                                            <!-- Tab panes -->
+                                            <div class="tab-content p-3">
+                                                <div class="tab-pane active" id="custom-home" role="tabpanel">
+                                                    		<table
+									class="datatable table table-bordered dt-responsive nowrap table-hover"
+									style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Amount</th>
+											<th>Date</th>
+											<th>Payment Type</th>
+											<th>Receipt</th>
+																						<th>Staff</th>
+											
+										</tr>
+									</thead>
+
+
+									<tbody>
+										<tr th:each="a,i:${shares}">
+											<td th:text="${i.index+1}">1</td>
+											<td th:text="${a.amount}">Win 95+</td>
+											<td th:text="${a.date}">4</td>
+											<td th:text="${a.type}">4</td>
+											<td th:text="${a.receipt}">4</td>
+											<td th:text="${a.staffName}">Trident</td>
+											
+				</tr>
+
+									</tbody>
+								</table>
+
+                                                </div>
+                                                <div class="tab-pane" id="custom-profile" role="tabpanel">
+                                                   		<table
+									class="datatable table table-bordered dt-responsive nowrap"
+									style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Amount</th>
+											<th>Date</th>
+											<th>Payment Type</th>
+											<th>Receipt</th>
+																						<th>Staff</th>
+											
+										</tr>
+									</thead>
+
+
+									<tbody>
+										<tr th:each="a,i:${loanpayment}">
+											<td th:text="${i.index+1}">1</td>
+											<td th:text="${a.amount}">Win 95+</td>
+											<td th:text="${a.date}">4</td>
+											<td th:text="${a.type}">4</td>
+											<td th:text="${a.receipt}">4</td>
+											<td th:text="${a.staffName}">Trident</td>
+
+										</tr>
+
+									</tbody>
+								</table>
+
+                                                </div>
+                                                <div class="tab-pane" id="custom-messages" role="tabpanel">
+                              <table  class="datatable table table-bordered dt-responsive nowrap table-hover" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                                <thead>
+                                                <tr>
+                                                   <th>#</th>
+                  <th>Amount Applied</th>
+                   <th>Amount Approved</th>
+                  <th>Loan Type</th>
+                  <th>Date Applied</th>
+                      <th>Date Approved</th>
+           
+                                                </tr>
+                                                </thead>
+            
+            
+                                                <tbody>
+                                                <tr th:each="a,i:${loans}">
+                                                   <td th:text="${i.index+1}">1</td>
+                  <td th:text="${a.amount}">Win 95+</td>
+                  <td th:text="${a.approvedAmount}"> 4</td>
+                   <td th:text="${a.type.type}"> 4</td>
+                     <td th:text="${a.dateApplied}"> 4</td>
+                   <td th:text="${a.dateApproved}"> 4</td>
+                               
+               
+                                                </tr>
+                                              
+                                                </tbody>
+                                            </table>
+            
+
+                                                </div>
+                                                <div class="tab-pane" id="custom-settings" role="tabpanel">
+                                                       <table  class="datatable table table-bordered dt-responsive nowrap table-hover" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                                <thead>
+                                                <tr>
+                                                   <th>#</th>
+                  <th>Amount</th>
+                   <th>Percentage</th>
+                  <th>Year</th>
+                  <th>Date Approved</th>
+           
+                                                </tr>
+                                                </thead>
+            
+            
+                                                <tbody>
+                                                <tr th:each="a,i:${interest}">
+                                                   <td th:text="${i.index+1}">1</td>
+                  <td th:text="${a.amount}">Win 95+</td>
+                  <td th:text="${a.year}"> 4</td>
+                   <td th:text="${a.percent}"> 4</td>
+                     <td th:text="${a.dateApproved}"> 4</td>
+                               
+               
+                                                </tr>
+                                              
+                                                </tbody>
+                                            </table>
+                                                </div>
+                                                
+                                                
+                                                
+                                                   <div class="tab-pane" id="beneficiaries" role="tabpanel">
+                                                  
+                                                     <table  class="datatable table table-bordered dt-responsive nowrap table-hover" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                                <thead>
+                                                <tr>
+                                                   <th>#</th>
+                  <th>Name</th>
+                   <th>Contact</th>
+                                     <th>Email</th>
+                   
+                  <th>Percentage</th>
+                  <th>Date of Birth</th>
+              <th>Date of Approved</th>
+                                                </tr>
+                                                </thead>
+            
+            
+                                                <tbody>
+                                                <tr th:each="a,i:${beneficiaries}">
+                                                   <td th:text="${i.index+1}">1</td>
+                  <td th:text="${a.name}">Win 95+</td>
+                  <td th:text="${a.contact}"> 4</td>
+                                       <td th:text="${a.email}"> 4</td>
+                  
+                   <td th:text="${a.percentage}"> 4</td>
+                     <td th:text="${a.dob}"> 4</td>
+                        <td th:text="${a.dateApproved}"> 4</td>
+                               
+               
+                                                </tr>
+                                              
+                                                </tbody>
+                                            </table>
+                                                  
+                                                  
+                                                  
+                                                </div>
+                                            </div>
+            
+                                        </div>
+                                    </div>
+                                </div>
+
+</div>
+
+		</div>
+				<!-- end row -->
+	</div>
+			<!-- end container-fluid -->
+		</div>
+		<!-- end page-content-wrapper -->
+
+	</div>
+	<!-- End Page-content -->
+
+
+</body>
+</html>

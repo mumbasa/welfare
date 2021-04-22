@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{index.html}">
+<head>
+<meta charset="UTF-8">
+<title>My Beneficiaries</title>
+
+</head>
+<body>
+	<div class="page-content" layout:fragment="content">
+		<th:block layout:fragment="tables"></th:block>
+		<th:block layout:fragment="alerts"></th:block>
+
+		<script type="text/javascript">
+		
+		$(document).ready(function() {
+			
+		
+		});
+		
+		function deleteBeneficiary(id) {
+
+			Swal
+					.fire({
+						title : "Are you sure?",
+						text : "You won't be able to revert this!",
+						icon : "warning",
+						showCancelButton : !0,
+						confirmButtonText : "Yes, delete it!",
+						cancelButtonText : "No, cancel!",
+						confirmButtonClass : "btn btn-success mt-2",
+						cancelButtonClass : "btn btn-danger ml-2 mt-2",
+						buttonsStyling : !1
+					})
+					.then(
+							function(t) {
+								t.value ? keke(id)
+										: t.dismiss === Swal.DismissReason.cancel
+												&& Swal
+														.fire({
+															title : "Cancelled",
+															text : "Your imaginary file is safe :)",
+															icon : "error"
+														})
+							});
+
+		}
+
+		function keke(id) {
+			$.ajax({
+				url : '/delete/beneficiary/' + id,
+				type : 'get',
+				success : function(data) {
+					Swal.fire({
+						title : "Deleted",
+						text : "Beneficiary Record Deleted",
+						icon : "success"
+					});
+				     window.location.replace(window.location.href);
+				},
+		
+
+			});
+		}
+
+		
+		
+		
+			function addbeneficiary() {
+				$("#loading").show();
+
+				var form = $('#form');
+				var formdata = false;
+				formdata = new FormData(form[0]);
+				$.ajax({
+					url : "/add/beneficiary/",
+					type : 'post',
+					data : formdata,
+					processData : false,
+					contentType : false,
+					cache : false,
+					success : function(data, status) {
+						hideLoading();
+						$('#record').modal('toggle');
+
+						Swal.fire({
+							title : "Benediciary Added Made",
+							text : "Addition successful",
+							icon : "success"
+						});
+
+						$('#form')[0].reset();
+						window.location.replace(window.location.href);
+
+					}
+				});
+
+			}
+
+			function showLoading() {
+				$("#loading").show();
+			}
+
+			function hideLoading() {
+				$("#loading").hide();
+			}
+			
+			function edit(id) {
+				var form = $('#form' + id);
+				var formdata = false;
+				formdata = new FormData(form[0]);
+
+				$.ajax({
+					url : '/update/beneficiary/',
+					type : 'post',
+					processData: false,
+				    contentType: false,
+					data : formdata,
+					success : function(data) {
+						Swal.fire({
+							title : "Updated",
+							text : "Payment Record Updated",
+							icon : "success"
+						});
+					     $('#record'+id).modal('toggle');
+
+					     window.location.replace(window.location.href);
+					},
+
+				});
+			}
+		</script>
+
+
+		<!-- Page-Title -->
+		<div class="page-title-box">
+			<div class="container-fluid">
+				<div class="row align-items-center">
+					<div class="col-md-8">
+						<h4 class="page-title mb-1">My</h4>
+						<ol class="breadcrumb m-0">
+							<li class="breadcrumb-item"><a href="javascript: void(0);">Beneficiaries</a></li>
+							<li class="breadcrumb-item active">Data</li>
+						</ol>
+					</div>
+					<div class="col-md-4">
+						<div class="float-right d-none d-md-block">
+
+
+							<button type="button" class="btn btn-light btn-rounded" th:if="${benportion < 100}"
+								data-toggle="modal" data-target="#record">Add
+								Beneficiary</button>
+							<!--  Modal content for the above example -->
+							<div id="record" class="modal fade bs-example-modal-xl"
+								tabindex="-1" role="dialog"
+								aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+								<div class="modal-dialog modal-xl">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title mt-0" id="myExtraLargeModalLabel">Add
+												Beneficiary</h5>
+											<button type="button" class="close" data-dismiss="modal"
+												aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+										<div class="modal-body">
+											<form action="" id="form">
+												<div class="form-group row">
+													<label for="name" class="col-md-2 col-form-label">Name</label>
+													<div class="col-md-10">
+														<input class="form-control" type="text" name="name">
+													</div>
+												</div>
+
+
+												<div class="form-group row">
+													<label for="dob" class="col-md-2 col-form-label">Date
+														of Birth</label>
+													<div class="col-md-10">
+														<input class="form-control" type="date" name="dob">
+													</div>
+												</div>
+												<div class="form-group row">
+													<label for="example-search-input"
+														class="col-md-2 col-form-label">Portion</label>
+													<div class="col-md-10">
+														<input class="form-control" type="number" min="1"  th:max="${100-benportion}"
+															name="share" id="share">
+													</div>
+												</div>
+
+												<div class="form-group row">
+													<label for="example-search-input"
+														class="col-md-2 col-form-label">Contact</label>
+													<div class="col-md-10">
+														<input class="form-control" type="text" max="100"
+															name="contact" id="cont">
+													</div>
+												</div>
+
+
+												<div class="form-group row">
+													<label for="example-search-input"
+														class="col-md-2 col-form-label">Email</label>
+													<div class="col-md-10">
+														<input class="form-control" type="email" max="100"
+															name="email" id="email">
+													</div>
+												</div>
+
+												<div class="form-group row">
+													<label for="example-search-input"
+														class="col-md-2 col-form-label">Relationship</label>
+													<div class="col-md-10">
+														<input class="form-control" type="text" name="relation"
+															id="relation">
+													</div>
+												</div>
+											</form>
+
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary waves-effect"
+													data-dismiss="modal">Close</button>
+												<button type="button"
+													class="btn btn-primary waves-effect waves-light"
+													onclick="addbeneficiary()">Save changes</button>
+											</div>
+
+										</div>
+									</div>
+									<!-- /.modal-content -->
+								</div>
+								<!-- /.modal-dialog -->
+							</div>
+
+
+
+
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<!-- end page title end breadcrumb -->
+
+		<div class="page-content-wrapper">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-body">
+
+								<h4 class="header-title">Record of Payments</h4>
+								<p class="card-title-desc">List of Payments and their
+									details</p>
+
+								<table
+									class="datatable table table-bordered dt-responsive nowrap table-hover"
+									style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Name</th>
+											<th>Contact</th>
+											<th>Email</th>
+
+											<th>Percentage</th>
+											<th>Date of Birth</th>
+											<th>Date of Approved</th>
+											<th></th>
+										</tr>
+									</thead>
+
+
+									<tbody>
+										<tr th:each="a,i:${beneficiaries}">
+											<td th:text="${i.index+1}">1</td>
+											<td th:text="${a.name}">Win 95+</td>
+											<td th:text="${a.contact}">4</td>
+											<td th:text="${a.email}">4</td>
+
+											<td th:text="${a.percentage}">4</td>
+											<td th:text="${a.dob}">4</td>
+											<td th:text="${a.dateApproved}">4</td>
+
+											<td>
+												<button class="btn btn-danger" 
+													th:onclick="'deleteBeneficiary('+${a.id}+')'">Delete
+													Record</button>
+												<button type="button"
+													class="btn btn-primary waves-effect waves-light"
+													data-toggle="modal" th:data-target="'#record'+${a.id}">Update
+													Record</button> <!--  Modal content for the above example -->
+												<div th:id="'record'+${a.id}"
+													class="modal fade bs-example-modal-xl" tabindex="-1"
+													role="dialog" aria-labelledby="myExtraLargeModalLabel"
+													aria-hidden="true">
+													<div class="modal-dialog modal-xl">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title mt-0" id="myExtraLargeModalLabel">Update
+																	Payment</h5>
+																<button type="button" class="close" data-dismiss="modal"
+																	aria-label="Close">
+																	<span aria-hidden="true">&times;</span>
+																</button>
+															</div>
+															<div class="modal-body">
+																<form action="" th:id="'form'+${a.id}">
+																	<div class="form-group row" style="display: none;">
+																		<label for="example-text-input"
+																			class="col-md-2 col-form-label">ID</label>
+																		<div class="col-md-10">
+																			<input class="form-control" type="number"
+																				th:value="${a.id}" name="id">
+																		</div>
+																	</div>
+																
+																	<div class="form-group row">
+																		<label for="example-search-input"
+																			class="col-md-2 col-form-label">Name</label>
+																		<div class="col-md-10">
+																			<input class="form-control" type="text"
+																				name="name" th:value="${a.name}" id="name">
+																		</div>
+																	</div>
+																
+																
+																<div class="form-group row">
+																		<label for="example-search-input"
+																			class="col-md-2 col-form-label">Email</label>
+																		<div class="col-md-10">
+																			<input class="form-control" type="email"
+																				name="email" th:value="${a.email}" id="email">
+																		</div>
+																	</div>
+																
+																	<div class="form-group row">
+																		<label for="example-search-input"
+																			class="col-md-2 col-form-label">Contact</label>
+																		<div class="col-md-10">
+																			<input class="form-control" type="text"
+																				name="contact" th:value="${a.contact}" id="eidtamount">
+																		</div>
+																	</div>
+																
+																	<div class="form-group row">
+																		<label for="example-search-input"
+																			class="col-md-2 col-form-label">Share</label>
+																		<div class="col-md-10">
+																			<input class="form-control" type="number" min="0" th:max="${a.percentage+(100-benportion)}"
+																				name="share" th:value="${a.percentage}" id="eidtamount">
+																		</div>
+																	</div>
+																	
+																	<div class="form-group row">
+																		<label for="example-search-input"
+																			class="col-md-2 col-form-label">Date Of Birth</label>
+																		<div class="col-md-10">
+																			<input class="form-control" type="date"
+																				name="dob" th:value="${a.dob}" id="eidtamount">
+																		</div>
+																	</div>
+																</form>
+
+																<div class="modal-footer">
+																	<button type="button"
+																		class="btn btn-secondary waves-effect"
+																		data-dismiss="modal">Close</button>
+																	<button type="button"
+																		class="btn btn-primary waves-effect waves-light"
+																		th:onclick="'edit('+${a.id}+')'">Save changes</button>
+																</div>
+
+															</div>
+														</div>
+														<!-- /.modal-content -->
+													</div>
+													<!-- /.modal-dialog -->
+												</div> <!-- /.modal -->
+
+
+											</td>
+
+										</tr>
+
+									</tbody>
+								</table>
+
+							</div>
+						</div>
+					</div>
+					<!-- end col -->
+				</div>
+				<!-- end row -->
+
+			</div>
+			<!-- end container-fluid -->
+		</div>
+		<!-- end page-content-wrapper -->
+	</div>
+	<!-- End Page-content -->
+
+
+</body>
+</html>

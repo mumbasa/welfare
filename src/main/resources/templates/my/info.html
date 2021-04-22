@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{index.html}">
+<head>
+<meta charset="UTF-8">
+<title>Update My Information</title>
+
+</head>
+<body>
+
+	<div class="page-content" layout:fragment="content">
+		<th:block layout:fragment="alerts"></th:block>
+
+		<script th:inline="javascript">
+			$(document).ready(function() {
+				$(".selectize").selectize();
+
+			});
+			
+			function update(id) {
+				var form = $('#pay');
+				var formdata = false;
+				formdata = new FormData(form[0]);
+			formdata.append("id",id);
+
+				$.ajax({
+					url : '/update/my/detail/',
+					data:formdata,
+					type : 'post',
+					processData: false,
+				    contentType: false,
+				    cache : false,
+					success : function(data) {
+											Swal.fire({title:"Updated",text:"Staff Data Updated",icon:"success"});
+						     window.location.replace(window.location.href);
+						
+											
+
+					},
+					error : function(error) {
+
+					}
+
+				});
+
+			}
+			
+			
+
+			
+		</script>
+
+
+
+
+
+		<!-- Page-Title -->
+		<div class="page-title-box">
+			<div class="container-fluid">
+				<div class="row align-items-center">
+					<div class="col-md-8">
+						<h4 class="page-title mb-1">Enroll Staff</h4>
+						<ol class="breadcrumb m-0">
+							<li class="breadcrumb-item"><a href="javascript: void(0);">Authentication</a></li>
+							<li class="breadcrumb-item active">Enroll Staff</li>
+						</ol>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+		<!-- end page title end breadcrumb -->
+
+		<div class="page-content-wrapper">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-11">
+
+
+						<div class="card">
+							<div class="card-body">
+
+								<h4 class="header-title">Edit My Details</h4>
+								<p class="card-title-desc">Populate the fields with data.
+									You can assign more than one access point</p>
+									
+																	<form th:action="@{/update/my/detail/}" th:method="post" enctype="multipart/form-data">
+									
+								<div class="row">
+									<div class="col-md-8">
+									
+										<div class="form-group row" style="display: none;">
+											<label for="example-text-input"
+												class="col-md-2 col-form-label">Id</label>
+											<div class="col-md-10">
+												<input class="form-control" type="text" th:value="${staff.id}" name="id" id="iad">
+											</div>
+										</div>
+										
+										<div class="form-group row">
+											<label for="example-text-input"
+												class="col-md-2 col-form-label">Name</label>
+											<div class="col-md-10">
+												<input class="form-control" type="text" th:value="${staff.name}" name="name" id="name">
+											</div>
+										</div>
+
+
+
+	<div class="form-group row">
+											<label for="example-search-input"
+												class="col-md-2 col-form-label">Controller Number</label>
+											<div class="col-md-10">
+												<input class="form-control" type="text"  th:value="${staff.staffId}" name="controller"
+													id="uid">
+											</div>
+										</div>
+
+
+										<div class="form-group row">
+											<label for="example-search-input"
+												class="col-md-2 col-form-label">Email</label>
+											<div class="col-md-10">
+												<input class="form-control" type="email" name="email" id="email"  th:value="${staff.email}">
+											</div>
+										</div>
+
+
+										<div class="form-group row">
+											<label for="example-search-input"
+												class="col-md-2 col-form-label">Mobile</label>
+											<div class="col-md-10">
+												<input class="form-control" type="text" name="mobile" id="mobile" th:value="${staff.telephone}">
+											</div>
+										</div>
+									
+									
+										<div class="form-group row">
+											<label for="example-search-input"
+												class="col-md-2 col-form-label">Picture</label>
+											<div class="col-md-10">
+												<input class="form-control" type="file" th:value="@{staff.picture}" name="file" id="fileS">
+											</div>
+										</div>
+									
+
+								
+
+
+
+			</div>
+									<div class="col-md-3">
+										<div class="box box-info">
+
+											<div id="cover"></div>
+											<!-- /.box-header -->
+											<!-- form start -->
+
+										</div>
+
+									</div>
+								</div>
+
+								<div class="form-group row mb-0">
+									<label class="col-md-2 col-form-label"></label>
+									<div class="col-md-10">
+										<button class="btn btn-info" type="submit" id="adds" 
+											>Update Details</button>
+									</div>
+								</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<!-- end col -->
+				</div>
+
+			</div>
+			<!-- end container-fluid -->
+		</div>
+		<!-- end page-content-wrapper -->
+	</div>
+	<!-- End Page-content -->
+
+
+
+
+</body>
+</html>

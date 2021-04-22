@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{index.html}">
+<head>
+<meta charset="UTF-8">
+<title>Add New System User</title>
+
+</head>
+<body>
+
+	<div class="page-content" layout:fragment="content">
+		<th:block layout:fragment="alerts"></th:block>
+		<th:block layout:fragment="camera"></th:block>
+
+		<script th:inline="javascript">
+			$(document).ready(function() {
+				$(".selectize").selectize();
+
+			});
+			
+			function sele() {
+				var pic;
+				var img = $('#imgs').attr('src');
+				Webcam.upload(img, '/add/pic', function(code, text) {
+					pic = (text);
+					
+					$.ajax({
+						url : '/add/user',
+						data : 'pic=' + pic + '&email=' + $('#uid').val()
+								+ '&name=' + $('#name').val() + '&role='
+								+ $('#role').val()
+								+ '&password='
+								+ $('#password').val(),
+						type : 'get',
+						success : function(data) {
+							if (data == 1) {
+								Swal.fire({title:"User added Successfully",text:"Staff Deleted",icon:"success"});
+								   setTimeout(
+							    		   function() 
+							    		   {
+							    			 
+												location.reload(); 
+
+							    			   
+							    		     //do something special
+							    		   }, 2000);
+
+							}
+
+						}
+
+					});
+
+				});
+
+			}
+
+			function take_snapshot() {
+				// take snapshot and get image data
+
+				Webcam
+						.snap(function(data_uri) {
+							// display results in page
+							document.getElementById('cover').innerHTML = '<img id="imgs" src="'+data_uri+'"/>';
+						});
+			}
+
+			$(document).ready(function() {
+				Webcam.set({
+					width : 480,
+					height : 300,
+					image_format : 'jpeg',
+					jpeg_quality : 90
+				});
+				Webcam.attach('#my_camera');
+
+			});
+		</script>
+
+
+
+
+
+		<!-- Page-Title -->
+		<div class="page-title-box">
+			<div class="container-fluid">
+				<div class="row align-items-center">
+					<div class="col-md-8">
+						<h4 class="page-title mb-1">Enrol New User</h4>
+						<ol class="breadcrumb m-0">
+							<li class="breadcrumb-item"><a href="javascript: void(0);">Setting</a></li>
+							<li class="breadcrumb-item active">Add User</li>
+						</ol>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+		<!-- end page title end breadcrumb -->
+
+		<div class="page-content-wrapper">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-11">
+
+
+						<div class="card">
+							<div class="card-body">
+
+								<h4 class="header-title">Enrol New System User</h4>
+								<p class="card-title-desc">Populate the fields with data.
+									You can assign more than one access point</p>
+								<div class="row">
+							
+									<div class="col-md-8">
+									
+										<div class="form-group row">
+											<label for="example-text-input"
+												class="col-md-2 col-form-label">Name</label>
+											<div class="col-md-10">
+												<input class="form-control" type="text" id="name"  name="name">
+											</div>
+										</div>
+										<div class="form-group row">
+											<label for="example-search-input"
+												class="col-md-2 col-form-label">Username</label>
+											<div class="col-md-10">
+												<input class="form-control" type="text" 	name="email" id="uid">
+											</div>
+										</div>
+										
+										 <div class="form-group row">
+                                                <label for="example-search-input" class="col-md-2 col-form-label">Password</label>
+                                                <div class="col-md-10">
+                                                    <input class="form-control" type="password" name="password" id="password">
+                                                </div>
+                                            </div>
+                                            
+										<div class="form-group row">
+											<label class="col-md-2 col-form-label">Role</label>
+											<div class="col-md-10">
+
+												<select class="form-control"  name="role" id="role">
+														<option th:each="p:${role}" th:text="${p.role}"
+												th:value="${p.id}"></option>
+												</select>
+											</div>
+										</div>
+
+
+
+
+
+										<div class="form-group row">
+											<label for="example-search-input"
+												class="col-md-2 col-form-label"></label>
+											<div class="col-md-10">
+												<input type="button" class="form-control btn-primary"
+													data-toggle="modal" data-target="#modal-warning"
+													value="Take Picture" id="title">
+												<div class="modal modal-warning fade" id="modal-warning">
+													<div class="modal-dialog modal-md">
+														<div class="modal-content">
+															<div class="modal-header">
+
+																<h4 class="modal-title text-primary">Take a Picture
+																	of Staff</h4>
+																<button type="button" class="close" data-dismiss="modal"
+																	aria-label="Close">
+																	<span aria-hidden="true">&times;</span>
+																</button>
+															</div>
+															<div class="modal-body">
+																<div id="my_camera"></div>
+															</div>
+															<div class="modal-footer">
+																<button type="button" class="btn btn-danger pull-left"
+																	data-dismiss="modal">Close</button>
+																<button type="button" class="btn btn-primary"
+																	onclick="take_snapshot()" data-dismiss="modal">Take
+																	Snapshot</button>
+															</div>
+														</div>
+														<!-- /.modal-content -->
+													</div>
+													<!-- /.modal-dialog -->
+												</div>
+											</div>
+										</div>
+									</div>
+								
+							
+									<div class="col-md-3">
+										<div class="box box-info">
+
+											<div id="cover"></div>
+											<!-- /.box-header -->
+											<!-- form start -->
+
+										</div>
+
+									</div>
+								</div>
+
+								<div class="form-group row mb-0">
+									<label class="col-md-2 col-form-label"></label>
+									<div class="col-md-10">
+										<button class="btn btn-info" th:onclick="sele()"
+											>Add Staff Details</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- end col -->
+				</div>
+
+			</div>
+			<!-- end container-fluid -->
+		</div>
+		<!-- end page-content-wrapper -->
+	</div>
+	<!-- End Page-content -->
+
+
+
+
+</body>
+</html>

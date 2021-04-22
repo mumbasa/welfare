@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+xmlns:th="http://www.thymeleaf.org" 
+layout:decorate="~{index.html}">
+<head>
+<meta charset="UTF-8">
+<title> Dashboard </title>
+                         
+</head>
+<body>
+                <div class="page-content" layout:fragment="content">
+   <th:block layout:fragment="script"></th:block>       
+                        
+                          <!-- Page-Title -->
+                    <div class="page-title-box">
+                        <div class="container-fluid">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h4 class="page-title mb-1">Dashboard</h4>
+                                    <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item active">Welcome to Welfare Dashboard</li>
+                                    </ol>
+                                </div>
+                                
+                            </div>
+
+                        </div>
+                    </div>
+                        
+                                            <div class="page-content-wrapper" >
+                        
+                                    
+                                                <div class="container-fluid" >
+                        
+              <script th:inline="javascript">
+              $( document ).ready(function() {
+            	  new Chart(document.getElementById("mixed-chart"), {
+            		  type: 'line',
+            		  data: {
+            		    labels: [[${contyears}]],
+            		    datasets: [{ 
+            		        data: [[${conts}]],
+            		        label: "Shares Contribtion",
+            		        borderColor: "#3e95cd",
+            		        fill: false
+            		      },
+            		    ]
+            		  },
+            		  options: {
+            		    title: {
+            		      display: true,
+            		      text: 'Yearly Contributions over the years'
+            		    }
+            		  }
+            		});
+
+              });
+              </script>   
+                            <div class="row">
+                                <div class="col-xl-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                        <div class="row">
+                                                <div class="col-6">
+                                                    <h5>Welcome Back !</h5>
+                                                    <p class="text-muted" th:text="${staff.name}">Shinaa Dashboard</p>
+
+                                                  
+                                                </div>
+
+                                                <div class="col-5 ml-auto">
+                                                    <div>
+                                                        <img th:src="@{/assets/images/widget-img.png}" alt="" class="img-fluid">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="header-title mb-4">Welfare Summary Report</h5>
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <p class="text-muted mb-2">Total Shares</p>
+                                                    <h5 th:text="'GH₵ '+ ${welfare}">25</h5>
+                                                </div>
+                                            
+                                            </div>
+                                            <hr>
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <p class="text-muted">Debt</p>
+                                                    <h5 th:text="'GH₵ '+ ${loanstotal-loanspaid}">25</h5>
+                                                </div>
+
+                                              
+                                            </div>
+                                                                                     
+                                            <hr>
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <p class="text-muted">Loans Paid</p>
+                                                    <h5 th:text="'GH₵ '+ ${loanspaid}">25</h5>
+                                                </div>
+
+                                              
+                                            </div>
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <div class="col-xl-8">
+                                    <div class="card">
+                                        <div class="card-body">
+                                        
+                                            <h5 class="header-title mb-4">Yearly Shares Result</h5>
+                                            <canvas id="mixed-chart"></canvas>
+                                                                                    </div>
+                                    </div>
+                                </div>
+        
+                            </div>
+                            <!-- end row -->
+
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="card">
+                                        <div class="card-header bg-transparent p-3">
+                                            <h5 class="header-title mb-0">System Status</h5>
+                                        </div>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">
+                                                <div class="media my-2">
+                                                    
+                                                    <div class="media-body">
+                                                        <p class="text-muted mb-2">Net Shares</p>
+                                                        <h5 class="mb-0" th:text="'GH₵ '+ ${welfare-(loanstotal-loanspaid)}">$ 14.56</h5>
+                                                    </div>
+                                                    <div class="icons-lg ml-2 align-self-center">
+                                                        <i class="uim uim-layer-group"></i>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <div class="media my-2">
+                                                    <div class="media-body">
+                                                        <p class="text-muted mb-2">Number of Beneficiaries</p>
+                                                        <h5 class="mb-0" th:text="${beneficiaries}">$ 14.56</h5>
+                                                    </div>
+                                                    <div class="icons-lg ml-2 align-self-center">
+                                                        <i class="uim uim-analytics"></i>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <div class="media my-2">
+                                                    <div class="media-body">
+                                                        <p class="text-muted mb-2">Unshared Benefits</p>
+                                                        <h5 class="mb-0" th:text="${benportion}+'%'">$ 14.56</h5>
+                                                    </div>
+                                                    <div class="icons-lg ml-2 align-self-center">
+                                                        <i class="uim uim-ruler"></i>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                           
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                              <!--   <div class="col-lg-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                
+                                            <h4 class="header-title">Overview of Yearly Interests</h4>
+                                            <p class="card-title-desc">Welfare interest given</p>
+                
+                                            <div id="animating-donut" class="ct-chart ct-golden-section" dir="ltr"></div>
+                
+                                        </div>
+                                    </div>
+                                </div>
+                                  <div class="col-lg-4">
+                                   
+                                <div class="card">
+                                        <div class="card-body">
+            
+                                            <h4 class="header-title">Recently Added Staff</h4>
+                                            <p class="card-title-desc">The details of staff </p>
+            
+                                            <div class="media mb-2" th:each="a:${recentadd}">
+                                                <img class="d-flex align-self-start rounded mr-3" th:src="@{/assets/images/users/avatar-3.jpg}" alt="" height="64">
+                                                <div class="media-body">
+                                                    <h5 class="font-size-15" th:text="${a.name}">Top-aligned media</h5>
+                                                    <p class="mb-2"  th:text="${a.department}">Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis..</p>
+                                                    <p th:text="${a.acessList}">Donec sed odio dui. Nullam quis risus eget ornare vel eu.</p>
+                                                </div>
+                                            </div>
+            
+                                         
+            
+                                        </div>
+                                    </div>
+                                 --></div>
+               
+                                   
+                                   
+                                   
+                                   
+                            </div>
+                            <!-- end row -->
+                <!-- end row -->
+
+                        </div> <!-- container-fluid -->
+                        </div>
+</div>
+</body>
+</html>

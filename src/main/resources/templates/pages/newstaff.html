@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org" layout:decorate="~{index.html}">
+<head>
+<meta charset="UTF-8">
+<title>Add New Staff</title>
+
+</head>
+<body>
+
+	<div class="page-content" layout:fragment="content">
+		<th:block layout:fragment="alerts"></th:block>
+
+		<script th:inline="javascript">
+			$(document).ready(function() {
+				$(".selectize").selectize();
+
+			});
+			
+			function sele() {
+				var form = $('#pay');
+				var formdata = false;
+				formdata = new FormData(form[0]);
+		
+					$.ajax({
+						url : '/add/staff',
+						data : formdata,
+						type : 'post',
+						 processData : false,
+							contentType : false,
+							cache : false,
+						success : function(data) {
+							if (data == 1) {
+								Swal.fire({
+									title : "Successful",
+									text : "Staff Details saved",
+									icon : "success",
+									confirmButtonColor : "#3051d3"
+								});
+								$('#pay')[0].reset();
+
+							}
+
+						}
+
+					});
+
+				}
+
+			
+
+			
+		</script>
+
+
+
+
+
+		<!-- Page-Title -->
+		<div class="page-title-box">
+			<div class="container-fluid">
+				<div class="row align-items-center">
+					<div class="col-md-8">
+						<h4 class="page-title mb-1">Enroll Staff</h4>
+						<ol class="breadcrumb m-0">
+							<li class="breadcrumb-item"><a href="javascript: void(0);">Authentication</a></li>
+							<li class="breadcrumb-item active">Enroll Staff</li>
+						</ol>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+		<!-- end page title end breadcrumb -->
+
+		<div class="page-content-wrapper">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-11">
+
+
+						<div class="card">
+							<div class="card-body">
+
+								<h4 class="header-title">Enrol New System User</h4>
+								<p class="card-title-desc">Populate the fields with data.
+									You can assign more than one access point</p>
+									
+																	<form action="" id="pay">
+									
+								<div class="row">
+									<div class="col-md-8">
+										<div class="form-group row">
+											<label for="example-text-input"
+												class="col-md-2 col-form-label">Name</label>
+											<div class="col-md-10">
+												<input class="form-control" type="text" name="name" id="name">
+											</div>
+										</div>
+
+										<div class="form-group row">
+											<label class="col-md-2 col-form-label">Departments</label>
+											<div class="col-md-10">
+
+												<select class="selectize" name="department" id="dept">
+													<option th:each="p:${depts}" th:text="${p.name}"
+														th:value="${p.id}"></option>
+												</select>
+											</div>
+										</div>
+
+
+	<div class="form-group row">
+											<label for="example-search-input"
+												class="col-md-2 col-form-label">Controller Number</label>
+											<div class="col-md-10">
+												<input class="form-control" type="text" name="controller"
+													id="uid">
+											</div>
+										</div>
+
+
+										<div class="form-group row">
+											<label for="example-search-input"
+												class="col-md-2 col-form-label">Email</label>
+											<div class="col-md-10">
+												<input class="form-control" type="email" name="email" id="email">
+											</div>
+										</div>
+
+
+										<div class="form-group row">
+											<label for="example-search-input"
+												class="col-md-2 col-form-label">mobile</label>
+											<div class="col-md-10">
+												<input class="form-control" type="text" name="mobile" id="mobile">
+											</div>
+										</div>
+										
+										<div class="form-group row">
+											<label class="col-md-2 col-form-label">Type</label>
+											<div class="col-md-10">
+
+												<select name="type" id="type" class="selectize" >
+													<option value="1">User</option>
+													<option value="2">Executive</option>
+													<option value="3">Chairman</option>
+													<option value="4">Clerk</option>
+												</select>
+											</div>
+										</div>
+
+									*
+
+
+
+			</div>
+									<div class="col-md-3">
+										<div class="box box-info">
+
+											<div id="cover"></div>
+											<!-- /.box-header -->
+											<!-- form start -->
+
+										</div>
+
+									</div>
+								</div>
+</form>
+								<div class="form-group row mb-0">
+									<label class="col-md-2 col-form-label"></label>
+									<div class="col-md-10">
+										<button class="btn btn-info" id="adds" th:onclick="sele()"
+											>Add Staff Details</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- end col -->
+				</div>
+
+			</div>
+			<!-- end container-fluid -->
+		</div>
+		<!-- end page-content-wrapper -->
+	</div>
+	<!-- End Page-content -->
+
+
+
+
+</body>
+</html>
