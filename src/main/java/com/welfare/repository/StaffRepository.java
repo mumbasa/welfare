@@ -236,7 +236,7 @@ public class StaffRepository {
 		String sql = "INSERT INTO `staff`(`last_name`,`staff_number`,`active`,`telephone`) VALUES(?,?,'Y',?)";
 		int status = template.update(sql, name, staffId, contact);
 		userRepository.addUser(staffId, name, code, rank);
-		String message = "You have been granted access to the IIR Welfare Platform on http://www.iirwelfare.com. Your username is "+staffId+" and your password is "+code+" Thank you";
+		String message = "You have been granted access to the IIR Welfare Platform on http://104.236.119.236:8081/login Your username is "+staffId+" and your password is "+code+" Thank you";
 		messageRepository.sendSms(message, contact);
 		return status;
 
